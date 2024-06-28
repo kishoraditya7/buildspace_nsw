@@ -2,3 +2,7 @@ steps.txt
 .env
 commands.txt
 suggestions.txt
+backend/nw_backend/nw_backend/settings/local.py
+keypairec2.pem
+y
+y.pub
