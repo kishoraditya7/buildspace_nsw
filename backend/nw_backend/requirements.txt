@@ -1,4 +1,7 @@
 
+django-environ==0.11.2
+
+
 Django==4.2.13
 wagtail==6.1.1
 wagtail-seo==2.5.0
@@ -17,3 +20,5 @@ psycopg2-binary==2.9.9
 l18n==2021.3
 fastapi==0.111.0
 gunicorn==22.0.0
+whitenoise==6.6.0
+uvicorn==0.30.1

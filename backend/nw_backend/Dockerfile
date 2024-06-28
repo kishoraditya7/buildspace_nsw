@@ -2,7 +2,7 @@
 FROM python:3.8.1-slim-buster
 
 # Add user that will be used in the container.
-RUN useradd wagtail
+RUN useradd -ms /bin/bash wagtail
 
 # Port used by this container to serve HTTP.
 EXPOSE 8000
@@ -13,6 +13,11 @@ EXPOSE 8000
 #    command.
 ENV PYTHONUNBUFFERED=1 \
     PORT=8000
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# Create directories for data persistence
+RUN mkdir -p /vol/web/static /vol/web/media
+RUN chown -R wagtail:wagtail /vol/web
 
 # Install system packages required by Wagtail and Django.
 RUN apt-get update --yes --quiet && apt-get install --yes --quiet --no-install-recommends \
@@ -22,6 +27,7 @@ RUN apt-get update --yes --quiet && apt-get install --yes --quiet --no-install-r
     libjpeg62-turbo-dev \
     zlib1g-dev \
     libwebp-dev \
+    gettext \
  && rm -rf /var/lib/apt/lists/*
 
 # Install the application server.
@@ -57,4 +63,4 @@ RUN python manage.py collectstatic --noinput --clear
 #   PRACTICE. The database should be migrated manually or using the release
 #   phase facilities of your hosting platform. This is used only so the
 #   Wagtail instance can be started with a simple "docker run" command.
-CMD set -xe; python manage.py migrate --noinput; gunicorn nw_backend.wsgi:application
+CMD set -xe; python manage.py migrate --noinput; gunicorn nw_backend.wsgi:application --bind 0.0.0.0:$PORT

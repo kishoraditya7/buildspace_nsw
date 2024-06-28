@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from .base import *
+import dj_database_url
+from decouple import config, Csv
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
@@ -59,6 +62,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
 ]
 
@@ -96,17 +100,28 @@ WSGI_APPLICATION = "nw_backend.wsgi.application"
 #    }
 #}
 
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': 'nw_db2',
+#        'USER': 'nw_user',
+#        'PASSWORD': 'q',
+#        'HOST': 'localhost',
+#        'PORT': '5432',
+#        #'OPTIONS': {
+#        #  'sslmode': 'require'
+#        #}
+#    }
+#}
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'nw_db2',
-        'USER': 'nw_user',
-        'PASSWORD': 'q',
-        'HOST': 'localhost',
-        'PORT': '5432',
-        #'OPTIONS': {
-        #  'sslmode': 'require'
-        #}
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT'),
     }
 }
 # Password validation
