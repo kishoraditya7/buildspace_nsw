@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgres://wagtail:wagtail@db/wagtail
+      - DJANGO_SETTINGS_MODULE=nw_backend.settings.dev
+      - SECRET_KEY=your_secret_key_here
+      - DEBUG=1
+    depends_on:
+      - db
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+      - ./media:/app/media
+      - ./static:/app/static
+
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=wagtail
+      - POSTGRES_USER=wagtail
+      - POSTGRES_PASSWORD=wagtail
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wagtail"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
